@@ -1,0 +1,20 @@
+import pymysql
+import re
+
+f = open('dict.txt')
+db = pymysql.connect('localhost','root','Zz170312.','dict')
+cursor = db.cursor()
+
+for line in f:
+	l = re.split(r'[ ]+',line)
+	word = l[0]
+	interpret = ' '.join(l[1:])
+	sql = "insert into words (word,interpret) values('%s','%s')" % (word,interpret)
+	
+	try:
+		cursor.execute(sql)
+		db.commit()
+	except:
+		db.rollback()
+
+f.close()
